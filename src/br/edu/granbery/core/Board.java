@@ -20,7 +20,7 @@ public class Board extends View {
 	private int grid[][];
 	
 	private int player = 0;
-	private static final int GRID_SIZE = 10;
+	private static final int GRID_SIZE = 20;
 	private static final int EASY_DIFFICULTY = 16;
 	private static final int MEDIUM_DIFFICULTY = 8;
 	private static final int HARD_DIFFICULTY = 4;
