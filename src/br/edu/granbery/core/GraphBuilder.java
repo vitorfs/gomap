@@ -1,14 +1,11 @@
-package br.edu.granbery.gomap.core;
+package br.edu.granbery.core;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * @author Vitor Freitas
- * vitorfs@gmail.com
- */
+import android.graphics.Point;
+
 public class GraphBuilder {
     
     private int gridSize;
@@ -34,7 +31,7 @@ public class GraphBuilder {
         for (int i=0;i<maxNodes;i++) {
             graph.nodes[i] = generatePiece(minSize, i);
         }
-        int k = 0;
+        //int k = 0;
         while (hasEmptySquare()) {
             int i = rand.nextInt(maxNodes);
             //if (graph.nodes[i].size() < maxSize) {
@@ -51,13 +48,16 @@ public class GraphBuilder {
         
         print();
 
-        for (int i=0;i<graph.nodes.length;i++) {
+/*        for (int i=0;i<graph.nodes.length;i++) {
             System.out.println(graph.nodes[i].size());
-        }
+        }*/
         
         /*for (int i=0;i<graph.nodes.length;i++) {
             printPieceAdjacencyOnMatrix(graph.nodes[i]);
         }*/
+        
+        graph.setControlGrid(controlGrid);
+        
         return graph;
     }
     
@@ -171,3 +171,4 @@ public class GraphBuilder {
     }
 
 }
+

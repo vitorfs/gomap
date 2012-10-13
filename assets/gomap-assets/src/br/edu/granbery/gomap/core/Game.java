@@ -7,7 +7,7 @@ package br.edu.granbery.gomap.core;
 public class Game {
     
     public static void main(String args[]) {
-        Board board = new Board(Board.MEDIUM_BOARD);      
+        Board board = new Board(Board.BIG_BOARD);      
         //board.print();
     }
 }

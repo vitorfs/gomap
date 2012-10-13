@@ -14,8 +14,8 @@ public class VersusAndroid extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-		Board board = new Board(this);
-		setContentView(board);
+		Game game = new Game(this);
+		setContentView(game);
 		
 	}
 
