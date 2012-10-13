@@ -43,7 +43,6 @@ public class Board extends View {
 				}
 			}
 		}
-
 	}
 	
 
@@ -140,7 +139,12 @@ public class Board extends View {
 		for (int i = 0 ; i <= getWidth() ; i+= squareSize) {
 			canvas.drawLine(i, 0, i, getWidth(), paint);
 			canvas.drawLine(0, i, getWidth(), i, paint);
-		}		
+		}
+		
+		paint.setColor(Color.WHITE);
+		canvas.drawLine(squareSize, 1, squareSize, squareSize, paint);
+		canvas.drawLine(squareSize * 2, 1, squareSize * 2, squareSize, paint);
+		canvas.drawLine(squareSize * 2, 72, squareSize * 2, squareSize, paint);
 	}
 
 }

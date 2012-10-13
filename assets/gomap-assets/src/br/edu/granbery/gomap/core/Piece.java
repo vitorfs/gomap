@@ -1,27 +1,35 @@
 package br.edu.granbery.gomap.core;
 
 import java.awt.Point;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Vitor Freitas
  * vitorfs@gmail.com
  */
 public class Piece {
-    public Set<Point> coordinates;
+    public List<Point> coordinates;
     private int id;
     private int value;
     
     public Piece() {
-        coordinates = new HashSet<Point>();
+        coordinates = new ArrayList<Point>();
         value = -1;
     }
     
     public Piece(int id) {
-        coordinates = new HashSet<Point>();
+        coordinates = new ArrayList<Point>();
         value = -1;
         this.id = id;
+    }
+    
+    public int size() {
+        return coordinates.size();
+    }
+    
+    public void clear() {
+        coordinates.clear();
     }
 
     public void add(int x, int y) {

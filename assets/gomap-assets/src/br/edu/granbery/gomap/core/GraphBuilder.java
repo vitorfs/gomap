@@ -1,6 +1,8 @@
 package br.edu.granbery.gomap.core;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -31,47 +33,82 @@ public class GraphBuilder {
                 
         for (int i=0;i<maxNodes;i++) {
             graph.nodes[i] = generatePiece(minSize, maxSize, i);
+            System.out.println(i + " => " + graph.nodes[i].size());
         }
         
         print();
-        for (int i=0;i<graph.nodes.length;i++) {
+        
+        /*for (int i=0;i<graph.nodes.length;i++) {
             printPieceAdjacencyOnMatrix(graph.nodes[i]);
-        }
+        }*/
         return graph;
     }
     
     private Piece generatePiece(int minSize, int maxSize, int id) {
         Piece p = new Piece(id);
-        int pieceSize = rand.nextInt(maxSize - minSize + 1) + minSize;
+        //int pieceSize = rand.nextInt(maxSize - minSize + 1) + minSize;
         
+        do {
+            setStartPoint(p);
+            
+            for (int i = 0; i < minSize-1 ; i++ ){
+                List<Point> adjacency = getPieceAdjacency(p);
+                if (!adjacency.isEmpty()) {
+                    int random = rand.nextInt(adjacency.size());
+                    Point point = adjacency.get(random);
+                    p.add(point);
+                    controlGrid[point.x][point.y] = id;
+                }
+            }
+            
+            if (p.size() != minSize) {
+                free(p);
+            }
+        } while (p.size() == 0);
+        
+        /*System.out.print(x + " " + y + " [" + id +"] => ");
+        for (Point point : adjacency) {
+            System.out.print(point.x + " " + point.y + ", ");
+        }
+        System.out.println();*/
+        
+        return p;
+    }
+    
+    private void setStartPoint(Piece p) {
         int x;
         int y;
-        
-        // Define start point
         do {
             x = rand.nextInt(gridSize);
             y = rand.nextInt(gridSize);
         } while (controlGrid[x][y] != -1);
         p.add(x, y);
-        controlGrid[x][y] = id;
-        
-        // Match adjacency
-        //for (int j=0;j<minSize-1;j++) {
-
-            /*for (int k=x-1;k<x+2;k++) {
-                for (int l=y-1;l<y+2;l++) {
-                    if (x!=k || y!=l) {
-                        if (k >= 0 && k < gridSize && l >=0 && l < gridSize) {
-                            if (controlGrid[k][l] == -1) {
-                                controlGrid[k][l] = id;
+        controlGrid[x][y] = p.getId();
+    }
+    
+    private List<Point> getPieceAdjacency(Piece piece) {
+        List<Point> adjacency = new ArrayList<Point>();
+        for (Point p : piece.coordinates) {
+            for (int i = p.x - 1 ; i < p.x + 2 ; i ++ ) {
+                for (int j = p.y - 1 ; j < p.y + 2 ; j ++) {
+                    if (p.x == i || p.y == j) { // Avoid diagonal
+                        if (i >= 0 && i < gridSize && j >=0 && j < gridSize) { // Valid position on matrix
+                            if (controlGrid[i][j] == -1) { // Position is free
+                                adjacency.add(new Point(i, j));
                             }
                         }
                     }
                 }
-            }*/
-
-        //}
-        return p;
+            }
+        }
+        return adjacency;
+    }
+    
+    private void free(Piece piece) {
+        for (Point p : piece.coordinates) {
+            controlGrid[p.x][p.y] = -1;
+        }
+        piece.clear();
     }
     
     private int getMaxNodes() {

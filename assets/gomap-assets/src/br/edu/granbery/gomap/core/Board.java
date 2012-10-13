@@ -12,7 +12,7 @@ public class Board {
     private static final int GRID_SIZE = 20;
     public static final int SMALL_BOARD = 16;
     public static final int MEDIUM_BOARD = 8;
-    public static final int BIG_BOARD = 8;
+    public static final int BIG_BOARD = 4;
     
     public Board(int boardSize) {
         initBoard();
