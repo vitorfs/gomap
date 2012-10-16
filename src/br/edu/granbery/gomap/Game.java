@@ -46,6 +46,7 @@ public class Game extends View {
 		
 		int x = (int)Math.floor((double)(p.x / getSquareSize()));
 		int y = (int)Math.floor((double)(p.y / getSquareSize()));
+
 		if (x < Board.GRID_SIZE && y < Board.GRID_SIZE){
 			if (board.grid[x][y] == -1) {
 				int player = (this.player++) % 2;
@@ -120,28 +121,24 @@ public class Game extends View {
 		paint.setColor(Color.WHITE);
 		
 		int grid[][] = board.game.getControlGrid();
+		// start x, start y, stop x, stop y		
 		for (int i=0;i<Board.GRID_SIZE;i++) {
 			for (int j=0;j<Board.GRID_SIZE;j++) {
-				int id = grid[i][j];
-				// start x, start y, stop x, stop y
-				
-				/*if (i-1 >= 0 && grid[i-1][j] == id) {
-					canvas.drawLine(squareSize, 1, squareSize, squareSize, paint);
-				}*/
-				
-				if (i+1 < Board.GRID_SIZE && grid[i+1][j] == id && id == 0) {
-					//canvas.drawLine(squareSize * (i+1), (j+1) * squareSize, squareSize * (i+1), squareSize, paint);
+				if (j+1 < Board.GRID_SIZE && grid[j+1][i] == grid[j][i]) {
+					canvas.drawLine(squareSize * (j+1), (squareSize * i) + 1, squareSize * (j+1), squareSize + (squareSize * i), paint);
 				}
-				
-				/*if (j-1 >= 0 && grid[i][j-1] == id) {
-					canvas.drawLine(squareSize, 1, squareSize, squareSize, paint);
-				}*/
-				
-				if (j+1 < Board.GRID_SIZE && grid[i][j+1] == id) {
-					//canvas.drawLine(squareSize, 1, squareSize, squareSize, paint);
-				}
+				if (i+1 < Board.GRID_SIZE && grid[j][i+1] == grid[j][i]) {
+					canvas.drawLine((squareSize * j) + 1, squareSize * (i+1), squareSize + (squareSize * j), squareSize * (i+1), paint);
+				}				
 			}
 		}
+				
+		//if (grid[0][0] == grid[1][0]) {
+			//canvas.drawLine(squareSize, 1, squareSize, squareSize, paint);
+		//}
+		//if (grid[1][0] == grid[2][0]) {
+			//canvas.drawLine(squareSize * 2, 1, squareSize * 2, squareSize, paint);
+		//}		
 		
 /*		paint.setColor(Color.WHITE);
 		canvas.drawLine(squareSize, 1, squareSize, squareSize, paint);
