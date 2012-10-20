@@ -54,6 +54,16 @@ public class Graph implements Cloneable {
     			newPieces[i] = nodes[i].clone();
     		}		
     		
+    		int newGrid[][] = new int[Board.GRID_SIZE][Board.GRID_SIZE];
+    		
+            for (int i=0;i<Board.GRID_SIZE;i++){
+                for (int j=0;j<Board.GRID_SIZE;j++) {
+                	newGrid[i][j] = controlGrid[i][j];
+                }
+            }    		
+            
+            clone.controlGrid = newGrid;
+    		
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			return null;

@@ -66,6 +66,9 @@ public class Board implements Cloneable {
             clone.grid = newGrid;
             clone.score = newScore;
             
+            clone.jogada = jogada;
+            clone.player = player;
+            
         	clone.game = game.clone();   		
     		return clone;
     	} catch (Exception e) {

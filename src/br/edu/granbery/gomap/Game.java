@@ -19,7 +19,7 @@ public class Game extends View {
 
 	private Board board;
 	private Piece bestMove = null;
-	private int originalDepth = 10;
+	private int originalDepth = 2;
 	
 	public Game(Context context, int dificuldade) {
 		super(context);
@@ -114,11 +114,12 @@ public class Game extends View {
 				makeMove(piece, board);
 				board.print();
 				
-				alphaBeta(board, 10, Integer.MIN_VALUE, Integer.MAX_VALUE);
+				alphaBeta(board, 2, Integer.MIN_VALUE, Integer.MAX_VALUE);
 				Piece android = bestMove;
-				//if (bestMove != null) {
+				if (bestMove != null) {
 					makeMove(android, board);
-				//}
+				}
+				bestMove = null;
 				
 				if (board.isGameOver()) {
 					String mensagem;
@@ -176,9 +177,9 @@ public class Game extends View {
 	private int alphaBeta(Board board, int depth, int alpha, int beta) {
 		if (depth == 0 || board.isGameOver()) {
 			if (board.player == 0)
-				return board.score[1] - board.score[0];
-			else
 				return board.score[0] - board.score[1];
+			else
+				return board.score[1] - board.score[0];
 		} else {
 			List<Piece> possibleMoves = board.game.getPossibleMoves();
 			if (board.player == 0) { // alpha
@@ -191,7 +192,6 @@ public class Game extends View {
 							this.bestMove = p;
 						}
 					}
-					
 					if (alpha >= beta) {
 						break;
 					}
