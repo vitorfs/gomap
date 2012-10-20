@@ -1,5 +1,7 @@
 package br.edu.granbery.gomap;
 
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,8 +18,8 @@ import br.edu.granbery.core.Piece;
 public class Game extends View {
 
 	private Board board;
-	private int player = 0;
-	private int score[];
+	private Piece bestMove = null;
+	private int originalDepth = 10;
 	
 	public Game(Context context, int dificuldade) {
 		super(context);
@@ -30,9 +32,8 @@ public class Game extends View {
 		}
 		
 		board = new Board(boardSize);
-		score = new int[2];
-		score[0] = 0;
-		score[1] = 0;
+		board.score[0] = 0;
+		board.score[1] = 0;
 	}
 	
 	@Override
@@ -54,7 +55,7 @@ public class Game extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		Point p = new Point((int)event.getX(), (int)event.getY());
-		setPlayerMove(p);
+		setPlayerMove(p);		
 		invalidate();
 		return super.onTouchEvent(event);
 	}
@@ -73,52 +74,61 @@ public class Game extends View {
 
 	}
 	
+	private void makeMove(Piece piece, Board board) {		
+		board.score[board.player]++;
+		board.game.nodes[piece.getId()].setValue(board.player);
+		
+		if (piece != null) {
+			for (Point point : piece.coordinates) {
+				board.grid[point.x][point.y] = board.player;
+			}
+		}
+		
+		int oponente = (board.player + 1) % 2;
+		for (Piece npiece : piece.adjacency) {
+			
+			if (npiece.getValue() == -1)
+				board.score[oponente]++;
+			else if (npiece.getValue() == board.player) {
+				board.score[board.player]--;
+				board.score[oponente]++;
+			}
+			
+			board.game.nodes[npiece.getId()].setValue(oponente);
+			for (Point k : npiece.coordinates) {
+				board.grid[k.x][k.y] = oponente;
+			}
+
+		}	
+		board.player = oponente;
+		board.jogada++;
+	}
+	
 	private void setPlayerMove(Point p) {
 		int x = (int)Math.floor((double)(p.x / getSquareSize()));
 		int y = (int)Math.floor((double)(p.y / getSquareSize()));
 
 		if (x < Board.GRID_SIZE && y < Board.GRID_SIZE){
 			if (board.grid[x][y] == -1) {
-				int player = (this.player++) % 2;
-				score[player]++;
-				board.game.getPiece(x, y).setValue(player);
 				Piece piece = board.game.getPiece(x, y);
-				//piece.setValue(player);
-				if (piece != null) {
-					for (Point point : piece.coordinates) {
-						board.grid[point.x][point.y] = player;
-					}
+				makeMove(piece, board);
+				board.print();
+				
+				alphaBeta(board, 10, Integer.MIN_VALUE, Integer.MAX_VALUE);
+				Piece android = bestMove;
+				//if (bestMove != null) {
+					makeMove(android, board);
+				//}
+				
+				if (board.isGameOver()) {
+					String mensagem;
+					if (board.score[0] == board.score[1]) mensagem = "Empate!";
+					else if (board.score[0] > board.score[1]) mensagem = "Jogador azul venceu!";
+					else mensagem = "Jogador vermelho venceu!";
+					Toast.makeText(getContext(), mensagem, Toast.LENGTH_LONG).show();
+					
 				}
 				
-				/*GraphBuilder gp = new GraphBuilder(Board.GRID_SIZE, Board.BIG_BOARD);
-				gp.initControlGrid();
-				List<Point> adj = gp.getPieceAdjacency(piece);
-
-				for (Point point : adj) {
-					Piece npiece = board.game.getPiece(point.x, point.y);
-					
-					if (piece != null && piece != npiece) {
-						for (Point k : npiece.coordinates) {
-							board.grid[k.x][k.y] = (player + 1) % 2;
-						}
-					}					
-				}*/
-				int oponente = (player + 1) % 2;
-				for (Piece npiece : piece.adjacency) {
-					
-					if (npiece.getValue() == -1)
-						score[oponente]++;
-					else if (npiece.getValue() == player) {
-						score[player]--;
-						score[oponente]++;
-					}
-					
-					board.game.nodes[npiece.getId()].setValue(oponente);
-					for (Point k : npiece.coordinates) {
-						board.grid[k.x][k.y] = oponente;
-					}
-
-				}
 			}
 			else {
 				Toast.makeText(getContext(), "Jogada inválida!", Toast.LENGTH_SHORT).show();
@@ -155,9 +165,56 @@ public class Game extends View {
 		}
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(30);
-		canvas.drawText("Jogador azul: " + score[0], 5, getWidth() + 50, paint);
+		canvas.drawText("Jogador azul: " + board.score[0], 5, getWidth() + 50, paint);
 		paint.setColor(Color.RED);
-		canvas.drawText("Jogador vermelho: " + score[1], 5, getWidth() + 100, paint);
+		canvas.drawText("Jogador vermelho: " + board.score[1], 5, getWidth() + 100, paint);
+		paint.setColor(Color.BLACK);
+		canvas.drawText("Jogada: " + board.jogada, 5, getWidth() + 150, paint);
+	}
+	
+	
+	private int alphaBeta(Board board, int depth, int alpha, int beta) {
+		if (depth == 0 || board.isGameOver()) {
+			if (board.player == 0)
+				return board.score[1] - board.score[0];
+			else
+				return board.score[0] - board.score[1];
+		} else {
+			List<Piece> possibleMoves = board.game.getPossibleMoves();
+			if (board.player == 0) { // alpha
+				for (Piece p : possibleMoves) {
+					Board tempBoard = board.clone();
+					makeMove(p, tempBoard);
+					int result = alphaBeta(tempBoard, depth - 1, alpha, beta);
+					if (result > alpha) {
+						if (depth == this.originalDepth) {
+							this.bestMove = p;
+						}
+					}
+					
+					if (alpha >= beta) {
+						break;
+					}
+				}
+				return alpha;
+			} else { // beta
+				for (Piece p : possibleMoves) {
+					Board tempBoard = board.clone();
+					makeMove(p, tempBoard);
+					int result = alphaBeta(tempBoard, depth - 1, alpha, beta);
+					if (result < beta) {
+						if (depth == this.originalDepth) {
+							this.bestMove = p;
+						}
+					}
+					
+					if (beta <= alpha) {
+						break;
+					}
+				}
+				return beta;
+			}
+		}
 	}
 
 }

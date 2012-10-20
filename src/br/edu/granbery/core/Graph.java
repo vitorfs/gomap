@@ -1,8 +1,11 @@
 package br.edu.granbery.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Point;
 
-public class Graph {
+public class Graph implements Cloneable {
 
     public Piece[] nodes;
     private int[][] controlGrid;
@@ -31,5 +34,29 @@ public class Graph {
     		}
     	}    	
     	return null;
+    }
+    
+    public List<Piece> getPossibleMoves() {
+    	List<Piece> possibleMoves = new ArrayList<Piece>();
+    	for (Piece p : nodes) {
+    		if (p.getValue() == -1) possibleMoves.add(p);
+    	}
+    	return possibleMoves;
+    }
+    
+    @Override
+    public Graph clone() {
+    	try {
+			Graph clone = (Graph) super.clone();
+			
+    		Piece newPieces[] = new Piece[nodes.length];
+    		for (int i=0;i<nodes.length;i++){
+    			newPieces[i] = nodes[i].clone();
+    		}		
+    		
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
     }
 }

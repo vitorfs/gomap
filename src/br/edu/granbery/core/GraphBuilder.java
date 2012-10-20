@@ -26,6 +26,7 @@ public class GraphBuilder {
         initControlGrid();
         
         int minSize = boardSize - (boardSize / 2);
+        if (minSize < 2) minSize = 2;
         int maxSize = boardSize + (boardSize / 2);
                 
         for (int i=0;i<maxNodes;i++) {

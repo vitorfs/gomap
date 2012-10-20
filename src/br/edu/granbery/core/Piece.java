@@ -5,7 +5,7 @@ import java.util.List;
 
 import android.graphics.Point;
 
-public class Piece {
+public class Piece implements Cloneable{
     public List<Point> coordinates;
     private int id;
     private int value;
@@ -86,6 +86,22 @@ public class Piece {
     	}
     	else {
     		return false;
+    	}
+    }
+    
+    public Piece clone() {
+    	try {
+    		 Piece clone = (Piece) super.clone();
+    		 
+    		 List<Point> cloneCoordinates = new ArrayList<Point>(coordinates.size());
+    		 for (Point p : coordinates) cloneCoordinates.add(p);
+    				 
+			 List<Piece> cloneAdj = new ArrayList<Piece>(adjacency.size());
+			 for (Piece p : adjacency) cloneAdj.add(p);    				 
+    			 
+    		 return clone;
+    	} catch (Exception e) {
+    		return null;
     	}
     }
     
