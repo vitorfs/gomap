@@ -31,7 +31,7 @@ public class GraphBuilder {
         for (int i=0;i<maxNodes;i++) {
             graph.nodes[i] = generatePiece(minSize, i);
         }
-        //int k = 0;
+        int k = 0;
         while (hasEmptySquare()) {
             int i = rand.nextInt(maxNodes);
             //if (graph.nodes[i].size() < maxSize) {
@@ -46,15 +46,20 @@ public class GraphBuilder {
             //if (k++ > 10000) break;
         }
         
-        print();
-
-/*        for (int i=0;i<graph.nodes.length;i++) {
-            System.out.println(graph.nodes[i].size());
-        }*/
+        GraphBuilder gp = new GraphBuilder(this.gridSize, this.boardSize);
+		gp.initControlGrid();
+		
+        for (Piece p : graph.nodes) {
+			List<Point> adj = gp.getPieceAdjacency(p);
+			for (Point point : adj) {
+				Piece npiece = graph.getPiece(point);
+				if (p != null && p != npiece) {
+					p.addAdjacency(npiece);
+				}
+			}
+        }
         
-        /*for (int i=0;i<graph.nodes.length;i++) {
-            printPieceAdjacencyOnMatrix(graph.nodes[i]);
-        }*/
+        print();
         
         graph.setControlGrid(controlGrid);
         
@@ -82,12 +87,6 @@ public class GraphBuilder {
             }
         } while (p.size() == 0);
         
-        /*System.out.print(x + " " + y + " [" + id +"] => ");
-        for (Point point : adjacency) {
-            System.out.print(point.x + " " + point.y + ", ");
-        }
-        System.out.println();*/
-        
         return p;
     }
     
@@ -102,7 +101,7 @@ public class GraphBuilder {
         controlGrid[x][y] = p.getId();
     }
     
-    private List<Point> getPieceAdjacency(Piece piece) {
+    public List<Point> getPieceAdjacency(Piece piece) {
         List<Point> adjacency = new ArrayList<Point>();
         for (Point p : piece.coordinates) {
             for (int i = p.x - 1 ; i < p.x + 2 ; i ++ ) {
@@ -136,7 +135,7 @@ public class GraphBuilder {
         return nodes;
     }    
     
-    private void initControlGrid() {
+    public void initControlGrid() {
         controlGrid = new int[gridSize][gridSize];
         for (int i=0;i<gridSize;i++) {
             for (int j=0;j<gridSize;j++) {

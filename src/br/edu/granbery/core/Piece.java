@@ -9,14 +9,17 @@ public class Piece {
     public List<Point> coordinates;
     private int id;
     private int value;
+    public List<Piece> adjacency;
     
     public Piece() {
         coordinates = new ArrayList<Point>();
+        adjacency = new ArrayList<Piece>();
         value = -1;
     }
     
     public Piece(int id) {
         coordinates = new ArrayList<Point>();
+        adjacency = new ArrayList<Piece>();
         value = -1;
         this.id = id;
     }
@@ -60,6 +63,30 @@ public class Piece {
     
     public int getValue() {
         return value;
+    }
+    
+    public void addAdjacency(Piece p) {
+    	if (!this.adjacency.contains(p)) {
+        	this.adjacency.add(p);
+        	p.addAdjacency(this);
+    	}
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if (o == this) return true;
+    	if (o instanceof Piece) {
+    		Piece castObj;
+    		castObj = (Piece)o;
+    		if (this.id == castObj.id) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	}
+    	else {
+    		return false;
+    	}
     }
     
 }

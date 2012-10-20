@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dificuldade"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupDificulty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+	    <RadioButton
+	        android:id="@+id/rbFacil"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Fácil"
+	        android:checked="true" 
+	        />
+	    <RadioButton
+	        android:id="@+id/rbMedio"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Médio" />
+	    <RadioButton
+	        android:id="@+id/rbDificil"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Difícil" />	
+	    <RadioButton
+	        android:id="@+id/rbMuitoDificil"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Muito Difícil" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Partida" />
+
+</LinearLayout>

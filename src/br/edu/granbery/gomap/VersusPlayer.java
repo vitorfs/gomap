@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Window;
 
-public class VersusAndroid extends Activity {
+public class VersusPlayer extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -13,7 +13,8 @@ public class VersusAndroid extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-		Game game = new Game(this, 0);
+		int index = getIntent().getExtras().getInt("Dificuldade");
+		Game game = new Game(this, index);
 		setContentView(game);
 		
 	}

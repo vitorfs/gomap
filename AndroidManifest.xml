@@ -31,7 +31,17 @@
             android:name=".VersusAndroid"
             android:label="@string/app_name" >
         </activity>
-                        
+        
+        <activity
+            android:name=".VersusPlayer"
+            android:label="@string/app_name" >
+        </activity>        
+
+        <activity
+            android:name=".Options"
+            android:label="@string/app_name" >
+        </activity>
+                
         <activity
             android:name=".About"
             android:label="@string/app_name" >
