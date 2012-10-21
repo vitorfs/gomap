@@ -5,7 +5,7 @@ import android.graphics.Point;
 public class Board implements Cloneable {
     
     public int grid[][];
-    public Graph game;
+    private Graph gameGraph;
     
     private int score[];
 	private int player;
@@ -21,7 +21,7 @@ public class Board implements Cloneable {
     public Board(int boardSize) {
         initBoard();
         initScore();
-        game = new GraphBuilder(GRID_SIZE, boardSize).build();
+        gameGraph = new GraphBuilder(GRID_SIZE, boardSize).build();
         player = 0;
         move = 0;
     }
@@ -43,7 +43,7 @@ public class Board implements Cloneable {
     
 	public void makeMove(Piece piece) {		
 		score[player]++;
-		game.nodes[piece.getId()].setValue(player);
+		gameGraph.value[piece.getId()] = player;
 		
 		if (piece != null) {
 			for (Point point : piece.coordinates) {
@@ -54,14 +54,14 @@ public class Board implements Cloneable {
 		int opponent = (getPlayer() + 1) % 2;
 		for (Piece adjacentPiece : piece.adjacency) {
 			
-			if (adjacentPiece.getValue() == -1)
+			if (gameGraph.value[adjacentPiece.getId()] == -1)
 				score[opponent]++;
-			else if (adjacentPiece.getValue() == getPlayer()) {
+			else if (gameGraph.value[adjacentPiece.getId()] == getPlayer()) {
 				score[player]--;
 				score[opponent]++;
 			}
 			
-			game.nodes[adjacentPiece.getId()].setValue(opponent);
+			gameGraph.value[adjacentPiece.getId()] = opponent;
 			for (Point point : adjacentPiece.coordinates) {
 				grid[point.x][point.y] = opponent;
 			}
@@ -72,7 +72,7 @@ public class Board implements Cloneable {
 	}    
     
 	public boolean isGameOver() {
-		return score[0] + score[1] == (game.nodes.length);
+		return score[0] + score[1] == (gameGraph.nodes.length);
 	}
 	
 	public String getWinner() {
@@ -97,6 +97,10 @@ public class Board implements Cloneable {
 
 	public void setMove(int move) {
 		this.move = move;
+	}
+	
+	public Graph getGameGraph() {
+		return gameGraph;
 	}
 
 	@Override
@@ -136,7 +140,7 @@ public class Board implements Cloneable {
             clone.move = move;
             clone.player = player;
             
-        	clone.game = game.clone();   		
+        	clone.gameGraph = gameGraph.clone();   		
     		return clone;
     	} catch (Exception e) {
     		return null;

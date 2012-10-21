@@ -14,7 +14,7 @@ public class Menu extends ListActivity {
 							, "About" };
 	
 	private String classes[] = { "VersusAndroid"
-							   , "Options"
+							   , "VersusPlayer"
 							   , "About" };
 		
 	@Override

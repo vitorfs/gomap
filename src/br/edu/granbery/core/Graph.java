@@ -8,10 +8,14 @@ import android.graphics.Point;
 public class Graph implements Cloneable {
 
     public Piece[] nodes;
+    public int[] value;
     private int[][] controlGrid;
     
     public Graph(int maxNodes) {
         nodes = new Piece[maxNodes];
+        value = new int[maxNodes];
+        for (int i=0;i<maxNodes;i++) 
+        	value[i] = -1;
     }
     
     public void setControlGrid(int[][] controlGrid) {
@@ -39,7 +43,7 @@ public class Graph implements Cloneable {
     public List<Piece> getPossibleMoves() {
     	List<Piece> possibleMoves = new ArrayList<Piece>();
     	for (Piece p : nodes) {
-    		if (p.getValue() == -1) possibleMoves.add(p);
+    		if (value[p.getId()] == -1) possibleMoves.add(p);
     	}
     	return possibleMoves;
     }
@@ -48,21 +52,13 @@ public class Graph implements Cloneable {
     public Graph clone() {
     	try {
 			Graph clone = (Graph) super.clone();
-			
-    		Piece newPieces[] = new Piece[nodes.length];
+    		
+    		int newValue[] = new int[value.length];
     		for (int i=0;i<nodes.length;i++){
-    			newPieces[i] = nodes[i].clone();
-    		}		
+    			newValue[i] = value[i];
+    		}
     		
-    		int newGrid[][] = new int[Board.GRID_SIZE][Board.GRID_SIZE];
-    		
-            for (int i=0;i<Board.GRID_SIZE;i++){
-                for (int j=0;j<Board.GRID_SIZE;j++) {
-                	newGrid[i][j] = controlGrid[i][j];
-                }
-            }    		
-            
-            clone.controlGrid = newGrid;
+    		clone.value = newValue;
     		
 			return clone;
 		} catch (CloneNotSupportedException e) {

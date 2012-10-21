@@ -1,6 +1,7 @@
 package br.edu.granbery.ai;
 
 import java.util.List;
+import java.util.Random;
 
 import br.edu.granbery.core.Board;
 import br.edu.granbery.core.Piece;
@@ -19,14 +20,14 @@ public class AlphaBeta {
 		bestMove = null;
 	}
 	
-	public int calculate(Board board, int depth, int alpha, int beta) {
+	private int calculate(Board board, int depth, int alpha, int beta) {
 		if (depth == 0 || board.isGameOver()) {
 			if (board.getPlayer() == 0)
 				return board.getScore()[0] - board.getScore()[1];
 			else
 				return board.getScore()[1] - board.getScore()[0];
 		} else {
-			List<Piece> possibleMoves = board.game.getPossibleMoves();
+			List<Piece> possibleMoves = board.getGameGraph().getPossibleMoves();
 			if (board.getPlayer() == 0) { // Alpha
 				for (Piece piece : possibleMoves) {
 					Board tempBoard = board.clone();
@@ -62,7 +63,14 @@ public class AlphaBeta {
 		}
 	}
 	
-	public Piece getBestMove() {
+	public Piece getBestMove(Board board) {
+		calculate(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		/*Piece bestMove = null;
+		List<Piece> pieces = board.getGameGraph().getPossibleMoves();
+		if (!pieces.isEmpty()) {
+			Random rand = new Random();
+			bestMove = pieces.get(rand.nextInt(pieces.size()));
+		}*/
 		return bestMove;
 	}
 	

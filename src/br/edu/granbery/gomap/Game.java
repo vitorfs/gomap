@@ -17,8 +17,9 @@ import br.edu.granbery.core.Piece;
 public class Game extends View {
 
 	private Board board;
+	private final int mode;
 	
-	public Game(Context context, int dificuldade) {
+	public Game(Context context, int dificuldade, int mode) {
 		super(context);
 		int boardSize = 0;
 		switch(dificuldade) {
@@ -29,6 +30,9 @@ public class Game extends View {
 		}
 		
 		board = new Board(boardSize);
+		this.mode = mode;
+		if (mode == 1)
+			setAndroidMove();
 	}
 	
 	@Override
@@ -69,21 +73,27 @@ public class Game extends View {
 
 	}
 	
+	private void setAndroidMove() {
+		AlphaBeta alphaBeta = new AlphaBeta(2);
+		Piece androidMove = alphaBeta.getBestMove(board);		
+		if (androidMove != null)
+			board.makeMove(androidMove);
+	}
+	
 	private void setPlayerMove(Point p) {
 		int x = (int)Math.floor((double)(p.x / getSquareSize()));
 		int y = (int)Math.floor((double)(p.y / getSquareSize()));
 
 		if (x < Board.GRID_SIZE && y < Board.GRID_SIZE){
 			if (board.grid[x][y] == -1) {
-				Piece piece = board.game.getPiece(x, y);
+				Piece piece = board.getGameGraph().getPiece(x, y);
 				board.makeMove(piece);
 				
 				//TODO remove
-				System.out.println(board);
+				//System.out.println(board);
 				
-				/*AlphaBeta alphaBeta = new AlphaBeta(10);
-				alphaBeta.calculate(board, 2, Integer.MIN_VALUE, Integer.MAX_VALUE);
-				board.makeMove(alphaBeta.getBestMove());*/
+				if (mode == 1)
+					setAndroidMove();
 				
 				if (board.isGameOver()) {
 					String message = board.getWinner();
@@ -113,7 +123,7 @@ public class Game extends View {
 		
 		paint.setColor(Color.WHITE);
 		
-		int grid[][] = board.game.getControlGrid();
+		int grid[][] = board.getGameGraph().getControlGrid();
 		// start x, start y, stop x, stop y		
 		for (int i=0;i<Board.GRID_SIZE;i++) {
 			for (int j=0;j<Board.GRID_SIZE;j++) {
@@ -125,13 +135,17 @@ public class Game extends View {
 				}				
 			}
 		}
+		
+		canvas.drawRect(0, getWidth() + 1, getWidth(), getWidth() + 75, getPlayerPaint(board.getPlayer()));
+		paint.setColor(Color.BLACK);
+		canvas.drawLine(0, getWidth() + 75, getWidth(), getWidth() + 75, paint);
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(30);
-		canvas.drawText("Jogador azul: " + board.getScore()[0], 5, getWidth() + 50, paint);
+		canvas.drawText("Jogador azul: " + board.getScore()[0], 5, getWidth() + 125, paint);
 		paint.setColor(Color.RED);
-		canvas.drawText("Jogador vermelho: " + board.getScore()[1], 5, getWidth() + 100, paint);
+		canvas.drawText("Jogador vermelho: " + board.getScore()[1], 5, getWidth() + 175, paint);
 		paint.setColor(Color.BLACK);
-		canvas.drawText("Jogada: " + board.getMove(), 5, getWidth() + 150, paint);
+		canvas.drawText("Jogada: " + board.getMove(), 5, getWidth() + 225, paint);
 	}
 	
 	

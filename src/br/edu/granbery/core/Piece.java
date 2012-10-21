@@ -8,19 +8,19 @@ import android.graphics.Point;
 public class Piece implements Cloneable{
     public List<Point> coordinates;
     private int id;
-    private int value;
+    //private int value;
     public List<Piece> adjacency;
     
     public Piece() {
         coordinates = new ArrayList<Point>();
         adjacency = new ArrayList<Piece>();
-        value = -1;
+        //value = -1;
     }
     
     public Piece(int id) {
         coordinates = new ArrayList<Point>();
         adjacency = new ArrayList<Piece>();
-        value = -1;
+        //value = -1;
         this.id = id;
     }
     
@@ -57,13 +57,13 @@ public class Piece implements Cloneable{
         return id;
     }
     
-    public void setValue(int value) {
+    /*public void setValue(int value) {
         this.value = value;
-    }
+    }*/
     
-    public int getValue() {
+    /*public int getValue() {
         return value;
-    }
+    }*/
     
     public void addAdjacency(Piece p) {
     	if (!this.adjacency.contains(p)) {
@@ -89,21 +89,17 @@ public class Piece implements Cloneable{
     	}
     }
     
+    /*@Override
     public Piece clone() {
-    	try {
-    		 Piece clone = (Piece) super.clone();
-    		 
-    		 List<Point> cloneCoordinates = new ArrayList<Point>(coordinates.size());
-    		 for (Point p : coordinates) cloneCoordinates.add(p);
-    				 
-			 List<Piece> cloneAdj = new ArrayList<Piece>(adjacency.size());
-			 for (Piece p : adjacency) cloneAdj.add(p);    				 
-    			 
-    		 return clone;
-    	} catch (Exception e) {
-    		return null;
-    	}
-    }
+    	Piece clone = null;
+		try {
+			clone = (Piece) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return clone;
+    }*/
     
 }
 
