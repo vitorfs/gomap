@@ -1,13 +1,15 @@
 package br.edu.granbery.core;
 
+import android.graphics.Point;
+
 public class Board implements Cloneable {
     
     public int grid[][];
     public Graph game;
     
-	public int player = 0;
-	public int score[];
-	public int jogada = 0;    
+    private int score[];
+	private int player;
+	private int move;    
     
     public static final int GRID_SIZE = 24; // 576
     
@@ -18,8 +20,10 @@ public class Board implements Cloneable {
     
     public Board(int boardSize) {
         initBoard();
+        initScore();
         game = new GraphBuilder(GRID_SIZE, boardSize).build();
-        score = new int[2];
+        player = 0;
+        move = 0;
     }
     
     private void initBoard() {
@@ -31,20 +35,83 @@ public class Board implements Cloneable {
         }        
     }
     
+    private void initScore() {
+        score = new int[2];
+        score[0] = 0;
+        score[1] = 0;    	
+    }
+    
+	public void makeMove(Piece piece) {		
+		score[player]++;
+		game.nodes[piece.getId()].setValue(player);
+		
+		if (piece != null) {
+			for (Point point : piece.coordinates) {
+				grid[point.x][point.y] = player;
+			}
+		}
+		
+		int opponent = (getPlayer() + 1) % 2;
+		for (Piece adjacentPiece : piece.adjacency) {
+			
+			if (adjacentPiece.getValue() == -1)
+				score[opponent]++;
+			else if (adjacentPiece.getValue() == getPlayer()) {
+				score[player]--;
+				score[opponent]++;
+			}
+			
+			game.nodes[adjacentPiece.getId()].setValue(opponent);
+			for (Point point : adjacentPiece.coordinates) {
+				grid[point.x][point.y] = opponent;
+			}
+
+		}	
+		player = opponent;
+		move++;
+	}    
+    
 	public boolean isGameOver() {
-		return score[0] + score[1] == (this.game.nodes.length);
+		return score[0] + score[1] == (game.nodes.length);
 	}
 	
-    public void print() {
+	public String getWinner() {
+		String winner;
+		if (score[0] == score[1]) winner = "Draw game!";
+		else if (score[0] > score[1]) winner = "Blue wins!";
+		else winner = "Red wins!";
+		return winner;
+	}
+	
+	public int getPlayer() {
+		return player;
+	}
+
+	public int[] getScore() {
+		return score;
+	}
+
+	public int getMove() {
+		return move;
+	}
+
+	public void setMove(int move) {
+		this.move = move;
+	}
+
+	@Override
+    public String toString() {
+		String str = "";
         for (int i=0;i<GRID_SIZE;i++){
             for (int j=0;j<GRID_SIZE;j++) {
             	if (grid[j][i]== -1)
-            		System.out.print("[ ]");
+            		str += "[ ]";
             	else
-            		System.out.print("[" + grid[j][i] + "]");
+            		str += "[" + grid[j][i] + "]";
             }
-            System.out.println();
+            str += "\n";
         }
+        return str;
     }
     
     @Override
@@ -66,7 +133,7 @@ public class Board implements Cloneable {
             clone.grid = newGrid;
             clone.score = newScore;
             
-            clone.jogada = jogada;
+            clone.move = move;
             clone.player = player;
             
         	clone.game = game.clone();   		

@@ -1,7 +1,5 @@
 package br.edu.granbery.gomap;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,14 +10,13 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import br.edu.granbery.ai.AlphaBeta;
 import br.edu.granbery.core.Board;
 import br.edu.granbery.core.Piece;
 
 public class Game extends View {
 
 	private Board board;
-	private Piece bestMove = null;
-	private int originalDepth = 2;
 	
 	public Game(Context context, int dificuldade) {
 		super(context);
@@ -32,8 +29,6 @@ public class Game extends View {
 		}
 		
 		board = new Board(boardSize);
-		board.score[0] = 0;
-		board.score[1] = 0;
 	}
 	
 	@Override
@@ -74,36 +69,6 @@ public class Game extends View {
 
 	}
 	
-	private void makeMove(Piece piece, Board board) {		
-		board.score[board.player]++;
-		board.game.nodes[piece.getId()].setValue(board.player);
-		
-		if (piece != null) {
-			for (Point point : piece.coordinates) {
-				board.grid[point.x][point.y] = board.player;
-			}
-		}
-		
-		int oponente = (board.player + 1) % 2;
-		for (Piece npiece : piece.adjacency) {
-			
-			if (npiece.getValue() == -1)
-				board.score[oponente]++;
-			else if (npiece.getValue() == board.player) {
-				board.score[board.player]--;
-				board.score[oponente]++;
-			}
-			
-			board.game.nodes[npiece.getId()].setValue(oponente);
-			for (Point k : npiece.coordinates) {
-				board.grid[k.x][k.y] = oponente;
-			}
-
-		}	
-		board.player = oponente;
-		board.jogada++;
-	}
-	
 	private void setPlayerMove(Point p) {
 		int x = (int)Math.floor((double)(p.x / getSquareSize()));
 		int y = (int)Math.floor((double)(p.y / getSquareSize()));
@@ -111,22 +76,18 @@ public class Game extends View {
 		if (x < Board.GRID_SIZE && y < Board.GRID_SIZE){
 			if (board.grid[x][y] == -1) {
 				Piece piece = board.game.getPiece(x, y);
-				makeMove(piece, board);
-				board.print();
+				board.makeMove(piece);
 				
-				alphaBeta(board, 2, Integer.MIN_VALUE, Integer.MAX_VALUE);
-				Piece android = bestMove;
-				if (bestMove != null) {
-					makeMove(android, board);
-				}
-				bestMove = null;
+				//TODO remove
+				System.out.println(board);
+				
+				/*AlphaBeta alphaBeta = new AlphaBeta(10);
+				alphaBeta.calculate(board, 2, Integer.MIN_VALUE, Integer.MAX_VALUE);
+				board.makeMove(alphaBeta.getBestMove());*/
 				
 				if (board.isGameOver()) {
-					String mensagem;
-					if (board.score[0] == board.score[1]) mensagem = "Empate!";
-					else if (board.score[0] > board.score[1]) mensagem = "Jogador azul venceu!";
-					else mensagem = "Jogador vermelho venceu!";
-					Toast.makeText(getContext(), mensagem, Toast.LENGTH_LONG).show();
+					String message = board.getWinner();
+					Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
 					
 				}
 				
@@ -166,55 +127,13 @@ public class Game extends View {
 		}
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(30);
-		canvas.drawText("Jogador azul: " + board.score[0], 5, getWidth() + 50, paint);
+		canvas.drawText("Jogador azul: " + board.getScore()[0], 5, getWidth() + 50, paint);
 		paint.setColor(Color.RED);
-		canvas.drawText("Jogador vermelho: " + board.score[1], 5, getWidth() + 100, paint);
+		canvas.drawText("Jogador vermelho: " + board.getScore()[1], 5, getWidth() + 100, paint);
 		paint.setColor(Color.BLACK);
-		canvas.drawText("Jogada: " + board.jogada, 5, getWidth() + 150, paint);
+		canvas.drawText("Jogada: " + board.getMove(), 5, getWidth() + 150, paint);
 	}
 	
 	
-	private int alphaBeta(Board board, int depth, int alpha, int beta) {
-		if (depth == 0 || board.isGameOver()) {
-			if (board.player == 0)
-				return board.score[0] - board.score[1];
-			else
-				return board.score[1] - board.score[0];
-		} else {
-			List<Piece> possibleMoves = board.game.getPossibleMoves();
-			if (board.player == 0) { // alpha
-				for (Piece p : possibleMoves) {
-					Board tempBoard = board.clone();
-					makeMove(p, tempBoard);
-					int result = alphaBeta(tempBoard, depth - 1, alpha, beta);
-					if (result > alpha) {
-						if (depth == this.originalDepth) {
-							this.bestMove = p;
-						}
-					}
-					if (alpha >= beta) {
-						break;
-					}
-				}
-				return alpha;
-			} else { // beta
-				for (Piece p : possibleMoves) {
-					Board tempBoard = board.clone();
-					makeMove(p, tempBoard);
-					int result = alphaBeta(tempBoard, depth - 1, alpha, beta);
-					if (result < beta) {
-						if (depth == this.originalDepth) {
-							this.bestMove = p;
-						}
-					}
-					
-					if (beta <= alpha) {
-						break;
-					}
-				}
-				return beta;
-			}
-		}
-	}
 
 }

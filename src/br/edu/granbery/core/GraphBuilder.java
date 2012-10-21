@@ -27,12 +27,12 @@ public class GraphBuilder {
         
         int minSize = boardSize - (boardSize / 2);
         if (minSize < 2) minSize = 2;
-        int maxSize = boardSize + (boardSize / 2);
+        //int maxSize = boardSize + (boardSize / 2);
                 
         for (int i=0;i<maxNodes;i++) {
             graph.nodes[i] = generatePiece(minSize, i);
         }
-        int k = 0;
+        //int k = 0;
         while (hasEmptySquare()) {
             int i = rand.nextInt(maxNodes);
             //if (graph.nodes[i].size() < maxSize) {
