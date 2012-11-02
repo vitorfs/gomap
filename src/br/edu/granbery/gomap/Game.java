@@ -103,7 +103,7 @@ public class Game extends View {
 				
 			}
 			else {
-				Toast.makeText(getContext(), "Jogada inv·lida!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "Jogada inv√°lida!", Toast.LENGTH_SHORT).show();
 			}
 		}		
 	}
@@ -114,24 +114,18 @@ public class Game extends View {
 		canvas.drawPaint(paint);
 		paint.setColor(Color.BLACK);
 		
-		int squareSize = getSquareSize();
-		
-		for (int i = 0 ; i <= getWidth() ; i+= squareSize) {
-			canvas.drawLine(i, 0, i, getWidth(), paint);
-			canvas.drawLine(0, i, getWidth(), i, paint);
-		}
-		
-		paint.setColor(Color.WHITE);
+		canvas.drawLine(0, getWidth(), getWidth(), getWidth(), paint);
 		
 		int grid[][] = board.getGameGraph().getControlGrid();
+		int squareSize = getSquareSize();
 		// start x, start y, stop x, stop y		
 		for (int i=0;i<Board.GRID_SIZE;i++) {
 			for (int j=0;j<Board.GRID_SIZE;j++) {
-				if (j+1 < Board.GRID_SIZE && grid[j+1][i] == grid[j][i]) {
-					canvas.drawLine(squareSize * (j+1), (squareSize * i) + 1, squareSize * (j+1), squareSize + (squareSize * i), paint);
+				if (j+1 < Board.GRID_SIZE && grid[j+1][i] != grid[j][i]) {
+					canvas.drawLine(squareSize * (j+1), (squareSize * i), squareSize * (j+1), squareSize + (squareSize * i), paint);
 				}
-				if (i+1 < Board.GRID_SIZE && grid[j][i+1] == grid[j][i]) {
-					canvas.drawLine((squareSize * j) + 1, squareSize * (i+1), squareSize + (squareSize * j), squareSize * (i+1), paint);
+				if (i+1 < Board.GRID_SIZE && grid[j][i+1] != grid[j][i]) {
+					canvas.drawLine((squareSize * j), squareSize * (i+1), squareSize + (squareSize * j), squareSize * (i+1), paint);
 				}				
 			}
 		}

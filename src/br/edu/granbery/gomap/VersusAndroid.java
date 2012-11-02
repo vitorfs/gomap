@@ -23,7 +23,6 @@ public class VersusAndroid extends Activity {
 		Button btnStart = (Button) findViewById(R.id.btnStart);
 		
 		btnStart.setOnClickListener(new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroupDificulty);
 				int id = rg.getCheckedRadioButtonId();
