@@ -1,7 +1,6 @@
 package br.edu.granbery.ai;
 
 import java.util.List;
-import java.util.Random;
 
 import br.edu.granbery.core.Board;
 import br.edu.granbery.core.Piece;

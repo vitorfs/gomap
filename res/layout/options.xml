@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/navy_background">
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dificuldade"
+        android:text="Tamanho do Mapa"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <RadioGroup
@@ -19,7 +20,7 @@
 	        android:id="@+id/rbFacil"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Fácil"
+	        android:text="Pequeno"
 	        android:checked="true" 
 	        />
 	    <RadioButton
@@ -31,12 +32,12 @@
 	        android:id="@+id/rbDificil"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Difícil" />	
+	        android:text="Grande" />	
 	    <RadioButton
 	        android:id="@+id/rbMuitoDificil"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Muito Difícil" />
+	        android:text="Muito Grande" />
     </RadioGroup>
 
     <Button

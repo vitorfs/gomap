@@ -1,6 +1,8 @@
 package br.edu.granbery.gomap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -16,12 +18,12 @@ public class VersusPlayer extends Activity {
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.options);
-		
+
 		Button btnStart = (Button) findViewById(R.id.btnStart);
-		
+
 		btnStart.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroupDificulty);
@@ -33,8 +35,8 @@ public class VersusPlayer extends Activity {
 				intent.putExtra("Dificuldade", idx);
 				intent.putExtra("Mode", 0);
 				startActivity(intent);
-				
+
 			}
-		});		
+		});
 	}
 }

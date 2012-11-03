@@ -1,12 +1,17 @@
 package br.edu.granbery.gomap;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -18,10 +23,14 @@ public class Game extends View {
 
 	private Board board;
 	private final int mode;
+	private BitmapDrawable bgTile;
 	
 	public Game(Context context, int dificuldade, int mode) {
 		super(context);
 		int boardSize = 0;
+		
+		bgTile = (BitmapDrawable) getResources().getDrawable(R.drawable.navy_blue);
+		
 		switch(dificuldade) {
 			case 0: boardSize = Board.SMALL_BOARD;break;
 			case 1: boardSize = Board.MEDIUM_BOARD;break;
@@ -48,15 +57,42 @@ public class Game extends View {
 				}
 			}
 		}
+		
+		if (board.isGameOver()) {
+			showGameOverDialog();
+		}
 	}
 	
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Point p = new Point((int)event.getX(), (int)event.getY());
-		setPlayerMove(p);		
-		invalidate();
+		if (!board.isGameOver()) {
+			Point p = new Point((int)event.getX(), (int)event.getY());
+			setPlayerMove(p);		
+			invalidate();
+		}
+		else {
+			showGameOverDialog();
+		}
 		return super.onTouchEvent(event);
+	}
+	
+	public void showGameOverDialog() {
+		final String items[] = { "Nova Partida", "Alterar Mapa", "Retornar a Tela Inicial", "Cancelar" };
+		AlertDialog.Builder ab = new AlertDialog.Builder(getContext());
+		ab.setTitle(board.getWinner());
+		ab.setItems(items, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface d, int choice) {
+				if (choice == 0) {
+
+				} else if (choice == 1) {
+
+				} else if (choice == 2) {
+
+				}
+			}
+		});
+		ab.show();		
 	}
 	
 	private int getSquareSize() {
@@ -68,16 +104,14 @@ public class Game extends View {
 		if (player == 0) p.setColor(Color.BLUE);
 		else if (player == 1) p.setColor(Color.RED);
 	    p.setStyle(Style.FILL);
-	    p.setAlpha(80);			
+	    p.setAlpha(50);			
 		return p;
 
 	}
 	
 	private void setAndroidMove() {
-		AlphaBeta alphaBeta = new AlphaBeta(2);
-		Piece androidMove = alphaBeta.getBestMove(board);		
-		if (androidMove != null)
-			board.makeMove(androidMove);
+		AndroidMove androidMove = new AndroidMove(2, getContext());
+		androidMove.execute("");
 	}
 	
 	private void setPlayerMove(Point p) {
@@ -95,12 +129,6 @@ public class Game extends View {
 				if (mode == 1)
 					setAndroidMove();
 				
-				if (board.isGameOver()) {
-					String message = board.getWinner();
-					Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-					
-				}
-				
 			}
 			else {
 				Toast.makeText(getContext(), "Jogada inválida!", Toast.LENGTH_SHORT).show();
@@ -110,11 +138,19 @@ public class Game extends View {
 	
 	private void paintBoard(Canvas canvas) {
 		Paint paint = new Paint();
-		paint.setColor(Color.WHITE);
-		canvas.drawPaint(paint);
-		paint.setColor(Color.BLACK);
 		
-		canvas.drawLine(0, getWidth(), getWidth(), getWidth(), paint);
+		canvas.drawBitmap(bgTile.getBitmap(), 0, 0, null);
+		canvas.drawBitmap(bgTile.getBitmap(), 0, bgTile.getBitmap().getHeight(), null);
+
+		paint.setColor(Color.WHITE);
+		paint.setAlpha(70);
+		//canvas.drawPaint(paint);
+		canvas.drawRect(0, 0, getWidth(), getWidth() + 75, paint);
+		
+		paint.setColor(Color.BLACK);
+		paint.setAlpha(100);
+		
+		
 		
 		int grid[][] = board.getGameGraph().getControlGrid();
 		int squareSize = getSquareSize();
@@ -132,16 +168,56 @@ public class Game extends View {
 		
 		canvas.drawRect(0, getWidth() + 1, getWidth(), getWidth() + 75, getPlayerPaint(board.getPlayer()));
 		paint.setColor(Color.BLACK);
+		canvas.drawLine(0, getWidth(), getWidth(), getWidth(), paint);
 		canvas.drawLine(0, getWidth() + 75, getWidth(), getWidth() + 75, paint);
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(30);
-		canvas.drawText("Jogador azul: " + board.getScore()[0], 5, getWidth() + 125, paint);
+		canvas.drawText("Blue: " + board.getScore()[0], 5, getWidth() + 125, paint);
 		paint.setColor(Color.RED);
-		canvas.drawText("Jogador vermelho: " + board.getScore()[1], 5, getWidth() + 175, paint);
+		canvas.drawText("Red: " + board.getScore()[1], 5, getWidth() + 175, paint);
 		paint.setColor(Color.BLACK);
 		canvas.drawText("Jogada: " + board.getMove(), 5, getWidth() + 225, paint);
 	}
 	
-	
+	private class AndroidMove extends AsyncTask<String, Integer, String> {
+		
+		private AlphaBeta alphaBeta;
+		private ProgressDialog dialog;
+		private Piece bestMove = null;
+		
+		public AndroidMove(int depth, Context context) {
+			alphaBeta = new AlphaBeta(depth);
+			this.dialog = new ProgressDialog(context);
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			bestMove = alphaBeta.getBestMove(board);
+			return "Success";
+		}
+		
+		@Override 
+		protected void onPostExecute(String result) {
+			if (this.dialog.isShowing()) {
+				this.dialog.dismiss();
+			}
+			
+			if (bestMove != null) 
+				board.makeMove(bestMove);			
+			invalidate();
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			this.dialog.setMessage("Calculando jogada...");
+			this.dialog.show();
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			
+		}
+		
+	}	
 
 }

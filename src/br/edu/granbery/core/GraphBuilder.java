@@ -59,7 +59,8 @@ public class GraphBuilder {
 				}
 			}
         }
-        
+        //TODO
+        //remove
         print();
         
         graph.setControlGrid(controlGrid);

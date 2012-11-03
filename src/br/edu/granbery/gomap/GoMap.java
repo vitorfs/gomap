@@ -19,4 +19,13 @@ public class GoMap extends Activity {
 		setContentView(game);
 		
 	}
+	
+/*	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+
+		
+		return true;
+	}*/
+	
+	
 }
