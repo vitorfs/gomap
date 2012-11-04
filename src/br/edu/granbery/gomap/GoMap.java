@@ -20,12 +20,12 @@ public class GoMap extends Activity {
 		
 	}
 	
-/*	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-
-		
-		return true;
-	}*/
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		finish();
+	}
 	
 	
 }

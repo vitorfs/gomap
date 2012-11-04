@@ -9,9 +9,9 @@ import android.widget.ListView;
 
 public class Menu extends ListActivity {
 	
-	private String menu[] = { "Player vs. Android"
-							, "Player vs. Player"
-							, "About" };
+	private String menu[] = { "Jogador vs. Android"
+							, "Jogador vs. Jogador"
+							, "Sobre" };
 	
 	private String classes[] = { "VersusAndroid"
 							   , "VersusPlayer"
@@ -20,6 +20,7 @@ public class Menu extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setListAdapter(new ArrayAdapter<String>(Menu.this, android.R.layout.simple_list_item_1, menu));
 	}
 	

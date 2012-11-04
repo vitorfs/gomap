@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,19 +24,19 @@ public class Game extends View {
 
 	private Board board;
 	private final int mode;
+	private final int boardSize;
 	private BitmapDrawable bgTile;
 	
 	public Game(Context context, int dificuldade, int mode) {
 		super(context);
-		int boardSize = 0;
 		
 		bgTile = (BitmapDrawable) getResources().getDrawable(R.drawable.navy_blue);
-		
 		switch(dificuldade) {
 			case 0: boardSize = Board.SMALL_BOARD;break;
 			case 1: boardSize = Board.MEDIUM_BOARD;break;
 			case 2: boardSize = Board.BIG_BOARD;break;
 			case 3: boardSize = Board.EXTREME_BOARD;break;
+			default: boardSize = 0;
 		}
 		
 		board = new Board(boardSize);
@@ -78,17 +79,25 @@ public class Game extends View {
 	}
 	
 	public void showGameOverDialog() {
-		final String items[] = { "Nova Partida", "Alterar Mapa", "Retornar a Tela Inicial", "Cancelar" };
+		final String items[] = { "Nova Partida", "Alterar Mapa", "Retornar à Tela Inicial", "Cancelar" };
 		AlertDialog.Builder ab = new AlertDialog.Builder(getContext());
 		ab.setTitle(board.getWinner());
 		ab.setItems(items, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface d, int choice) {
 				if (choice == 0) {
-
+					board = new Board(boardSize);
+					if (mode == 1)
+						setAndroidMove();
 				} else if (choice == 1) {
-
+					Intent i = null;
+					if (mode==0) 
+						i = new Intent(getContext(), VersusPlayer.class);
+					else 
+						i = new Intent(getContext(), VersusAndroid.class);
+					getContext().startActivity(i);
 				} else if (choice == 2) {
-
+					Intent i = new Intent(getContext(), Menu.class);
+					getContext().startActivity(i);
 				}
 			}
 		});
@@ -139,9 +148,8 @@ public class Game extends View {
 	private void paintBoard(Canvas canvas) {
 		Paint paint = new Paint();
 		
-		canvas.drawBitmap(bgTile.getBitmap(), 0, 0, null);
-		canvas.drawBitmap(bgTile.getBitmap(), 0, bgTile.getBitmap().getHeight(), null);
-
+		setBackgroundResource(R.drawable.navy_background);
+		
 		paint.setColor(Color.WHITE);
 		paint.setAlpha(70);
 		//canvas.drawPaint(paint);
@@ -172,9 +180,9 @@ public class Game extends View {
 		canvas.drawLine(0, getWidth() + 75, getWidth(), getWidth() + 75, paint);
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(30);
-		canvas.drawText("Blue: " + board.getScore()[0], 5, getWidth() + 125, paint);
+		canvas.drawText("Azul: " + board.getScore()[0], 5, getWidth() + 125, paint);
 		paint.setColor(Color.RED);
-		canvas.drawText("Red: " + board.getScore()[1], 5, getWidth() + 175, paint);
+		canvas.drawText("Vermelho: " + board.getScore()[1], 5, getWidth() + 175, paint);
 		paint.setColor(Color.BLACK);
 		canvas.drawText("Jogada: " + board.getMove(), 5, getWidth() + 225, paint);
 	}
@@ -188,6 +196,13 @@ public class Game extends View {
 		public AndroidMove(int depth, Context context) {
 			alphaBeta = new AlphaBeta(depth);
 			this.dialog = new ProgressDialog(context);
+			this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+		          public void onCancel(DialogInterface dialog) {
+		              cancel(true);
+		              Intent i = new Intent(getContext(), Menu.class);
+		              getContext().startActivity(i);
+		          }
+		    });
 		}
 
 		@Override
@@ -202,9 +217,11 @@ public class Game extends View {
 				this.dialog.dismiss();
 			}
 			
-			if (bestMove != null) 
-				board.makeMove(bestMove);			
-			invalidate();
+			if (bestMove != null) {
+				board.makeMove(bestMove);
+				invalidate();
+			}
+			
 		}
 		
 		@Override

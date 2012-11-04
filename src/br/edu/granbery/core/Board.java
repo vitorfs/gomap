@@ -77,9 +77,9 @@ public class Board implements Cloneable {
 	
 	public String getWinner() {
 		String winner;
-		if (score[0] == score[1]) winner = "Draw game!";
-		else if (score[0] > score[1]) winner = "Blue wins!";
-		else winner = "Red wins!";
+		if (score[0] == score[1]) winner = "Empate!";
+		else if (score[0] > score[1]) winner = "Vitória do Azul!";
+		else winner = "Vitória do Vermelho!";
 		return winner;
 	}
 	
