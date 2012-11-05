@@ -4,7 +4,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@drawable/linen_background">
-
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo" 
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"/>
     <TextView
         android:id="@+id/textView1"
         android:layout_width="fill_parent"
@@ -20,14 +26,17 @@
         android:gravity="center"
         android:text="@string/app_description"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+    
 
+    
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Desenvolvido por:"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:id="@+id/textView4"
@@ -35,7 +44,7 @@
         android:layout_height="wrap_content"
         android:text="Hugo Moutinho"
         android:textAppearance="?android:attr/textAppearanceSmall" 
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="15dp"/>
 
     <TextView
         android:id="@+id/textView5"
@@ -43,7 +52,7 @@
         android:layout_height="wrap_content"
         android:text="Saulo Villela"
         android:textAppearance="?android:attr/textAppearanceSmall" 
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="15dp"/>
 
     <TextView
         android:id="@+id/textView6"
@@ -51,6 +60,6 @@
         android:layout_height="wrap_content"
         android:text="Vitor Freitas"
         android:textAppearance="?android:attr/textAppearanceSmall" 
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="15dp"/>
 
 </LinearLayout>

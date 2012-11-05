@@ -4,6 +4,15 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@drawable/app_background">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo" 
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"/>
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -11,7 +20,7 @@
         android:textSize="35dp"
         android:gravity="center"
         android:textStyle="bold"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="75dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
     <TextView

@@ -17,24 +17,26 @@ public final class R {
         public static final int gomap_icon=0x7f020003;
         public static final int ic_launcher=0x7f020004;
         public static final int linen_background=0x7f020005;
-        public static final int low_contrast_linen=0x7f020006;
-        public static final int nasty_fabric=0x7f020007;
-        public static final int navy_background=0x7f020008;
-        public static final int navy_blue=0x7f020009;
+        public static final int logo=0x7f020006;
+        public static final int low_contrast_linen=0x7f020007;
+        public static final int nasty_fabric=0x7f020008;
+        public static final int navy_background=0x7f020009;
+        public static final int navy_blue=0x7f02000a;
     }
     public static final class id {
-        public static final int btnStart=0x7f05000b;
-        public static final int radioGroupDificulty=0x7f050006;
-        public static final int rbDificil=0x7f050009;
-        public static final int rbFacil=0x7f050007;
-        public static final int rbMedio=0x7f050008;
-        public static final int rbMuitoDificil=0x7f05000a;
-        public static final int textView1=0x7f050000;
-        public static final int textView2=0x7f050001;
-        public static final int textView3=0x7f050002;
-        public static final int textView4=0x7f050003;
-        public static final int textView5=0x7f050004;
-        public static final int textView6=0x7f050005;
+        public static final int btnStart=0x7f05000c;
+        public static final int imageView1=0x7f050000;
+        public static final int radioGroupDificulty=0x7f050007;
+        public static final int rbDificil=0x7f05000a;
+        public static final int rbFacil=0x7f050008;
+        public static final int rbMedio=0x7f050009;
+        public static final int rbMuitoDificil=0x7f05000b;
+        public static final int textView1=0x7f050001;
+        public static final int textView2=0x7f050002;
+        public static final int textView3=0x7f050003;
+        public static final int textView4=0x7f050004;
+        public static final int textView5=0x7f050005;
+        public static final int textView6=0x7f050006;
     }
     public static final class layout {
         public static final int about=0x7f030000;
